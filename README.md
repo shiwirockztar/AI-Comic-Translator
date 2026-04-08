@@ -44,3 +44,10 @@ El resultado se guarda en una carpeta temporal del entorno y también se empaque
 ## Recomendación práctica
 
 Si quieres el flujo más estable, sube un ZIP con todas las páginas ordenadas. Si prefieres revisión manual, sube las imágenes una por una o selecciona varias al mismo tiempo.
+
+## Solución de problemas
+
+- Si ves un bloque largo de JavaScript al subir archivos en Colab, es normal: forma parte del mecanismo interno de `files.upload()`.
+- En la primera ejecución, EasyOCR descarga modelos y puede tardar varios minutos.
+- Si aparece un error similar a "not enough values to unpack (expected 3, got 2)", usa la versión actual del notebook y vuelve a ejecutar desde la primera celda.
+- Si una ejecución falla a mitad, usa "Runtime > Restart runtime" y ejecuta todas las celdas en orden.
