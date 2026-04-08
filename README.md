@@ -7,20 +7,25 @@ Notebook para Google Colab que traduce páginas de cómics del inglés al españ
 - Permite subir varias imágenes JPG/PNG.
 - Permite subir un archivo ZIP con todas las páginas del cómic.
 - También admite descargar imágenes desde una URL básica, si activas esa opción en la configuración.
-- Detecta texto con EasyOCR y usa Tesseract como respaldo.
+- Detecta texto con preprocesamiento robusto (escala de grises, CLAHE, denoise y binarización adaptativa).
+- Usa EasyOCR como motor principal, con opción de Tesseract o PaddleOCR.
+- Reintenta OCR en regiones de baja confianza.
+- Corrige texto OCR en inglés con diccionario + fuzzy matching (rapidfuzz).
+- Traduce con deep-translator usando GoogleTranslator.
 - Borra el texto original con inpainting y escribe la traducción encima.
 - Guarda todas las páginas traducidas y las comprime en un ZIP.
 
 ## Cómo usarlo en Colab
 
 1. Abre el notebook [ai_comic_translator_colab.ipynb](ai_comic_translator_colab.ipynb) en Google Colab.
-2. Ejecuta la celda de instalación de dependencias.
-3. Ejecuta la celda de configuración y procesamiento.
-4. Cuando aparezca el selector de archivos, sube una de estas opciones:
+2. Ejecuta las celdas 1 a 5 en orden para cargar funciones y pipeline.
+3. Ajusta opciones en la celda 6 (motor OCR, corrección, idioma, etc.).
+4. Ejecuta la celda 6 para iniciar la carga y procesamiento.
+5. Cuando aparezca el selector de archivos, sube una de estas opciones:
 	- varias imágenes JPG/PNG, o
 	- un archivo ZIP con las páginas del cómic.
-5. Espera a que termine el OCR, la traducción y el renderizado.
-6. Al finalizar, el notebook genera un ZIP con las imágenes traducidas y descarga el archivo automáticamente en Colab.
+6. Espera a que termine el OCR, corrección, traducción y renderizado.
+7. Al finalizar, el notebook genera un ZIP con las imágenes traducidas y descarga el archivo automáticamente en Colab.
 
 ## Importante
 
@@ -33,6 +38,10 @@ Notebook para Google Colab que traduce páginas de cómics del inglés al españ
 Dentro del notebook puedes cambiar:
 
 - `CONFIG['target_lang']`: idioma de salida, por ejemplo `es`, `fr`, `pt`, `it`.
+- `CONFIG['source_lang']`: idioma de origen. Por defecto está en `en` para cómics en inglés.
+- `CONFIG['ocr_engine']`: `easyocr`, `tesseract` o `paddle`.
+- `CONFIG['enable_ocr_correction']`: activa/desactiva corrección de OCR.
+- `CONFIG['retry_low_confidence']`: reintento de OCR en cajas con baja confianza.
 - `CONFIG['keep_original_subtitle']`: activa o desactiva el subtítulo con el texto original.
 - `CONFIG['use_gpu']`: si quieres intentar usar GPU cuando esté disponible.
 - `CONFIG['use_url_input']`: para descargar imágenes desde una URL.
@@ -51,3 +60,7 @@ Si quieres el flujo más estable, sube un ZIP con todas las páginas ordenadas. 
 - En la primera ejecución, EasyOCR descarga modelos y puede tardar varios minutos.
 - Si aparece un error similar a "not enough values to unpack (expected 3, got 2)", usa la versión actual del notebook y vuelve a ejecutar desde la primera celda.
 - Si una ejecución falla a mitad, usa "Runtime > Restart runtime" y ejecuta todas las celdas en orden.
+- Si quieres máxima precisión en OCR, prueba:
+	- `CONFIG['ocr_engine'] = 'easyocr'`
+	- `CONFIG['enable_ocr_correction'] = True`
+	- `CONFIG['retry_low_confidence'] = True`
