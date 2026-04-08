@@ -11,6 +11,7 @@ Notebook para Google Colab que traduce páginas de cómics del inglés al españ
 - Usa EasyOCR como motor principal, con opción de Tesseract o PaddleOCR.
 - Reintenta OCR en regiones de baja confianza.
 - Corrige texto OCR en inglés con diccionario + fuzzy matching (rapidfuzz).
+- Añade corrección contextual (`correct_context`) con IA opcional (Gemini) y fallback local.
 - Traduce con deep-translator usando GoogleTranslator.
 - Borra el texto original con inpainting y escribe la traducción encima.
 - Guarda todas las páginas traducidas y las comprime en un ZIP.
@@ -40,8 +41,12 @@ Dentro del notebook puedes cambiar:
 - `CONFIG['target_lang']`: idioma de salida, por ejemplo `es`, `fr`, `pt`, `it`.
 - `CONFIG['source_lang']`: idioma de origen. Por defecto está en `en` para cómics en inglés.
 - `CONFIG['ocr_engine']`: `easyocr`, `tesseract` o `paddle`.
+- `CONFIG['ocr_min_confidence']`: por defecto `0.50` para filtrar OCR inestable.
 - `CONFIG['enable_ocr_correction']`: activa/desactiva corrección de OCR.
+- `CONFIG['use_ai_context_correction']`: activa corrección contextual con IA.
+- `CONFIG['gemini_api_key']`: API key para corrección IA (opcional).
 - `CONFIG['retry_low_confidence']`: reintento de OCR en cajas con baja confianza.
+- `CONFIG['manual_box_mode']`: `ask`, `always` o `never` para seleccionar regiones manualmente por pagina.
 - `CONFIG['keep_original_subtitle']`: activa o desactiva el subtítulo con el texto original.
 - `CONFIG['use_gpu']`: si quieres intentar usar GPU cuando esté disponible.
 - `CONFIG['use_url_input']`: para descargar imágenes desde una URL.
@@ -60,6 +65,8 @@ Si quieres el flujo más estable, sube un ZIP con todas las páginas ordenadas. 
 - En la primera ejecución, EasyOCR descarga modelos y puede tardar varios minutos.
 - Si aparece un error similar a "not enough values to unpack (expected 3, got 2)", usa la versión actual del notebook y vuelve a ejecutar desde la primera celda.
 - Si una ejecución falla a mitad, usa "Runtime > Restart runtime" y ejecuta todas las celdas en orden.
+- Si quieres corrección contextual con IA, activa `use_ai_context_correction` y coloca `gemini_api_key`.
+- Si una pagina no detecta todo el texto, usa `manual_box_mode='ask'` y marca manualmente regiones con 2 clics por globo.
 - Si quieres máxima precisión en OCR, prueba:
 	- `CONFIG['ocr_engine'] = 'easyocr'`
 	- `CONFIG['enable_ocr_correction'] = True`
