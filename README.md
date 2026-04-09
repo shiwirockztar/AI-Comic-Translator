@@ -1,5 +1,11 @@
 # AI Comic Translator
 
+820, 5, 1050, 340
+830, 10, 1050, 220
+
+problemas de la mascara de texto
+
+
 Notebook para Google Colab que traduce páginas de cómics del inglés al español usando OCR, limpieza del texto original, traducción automática y reescritura dentro de la imagen.
 
 ## Qué hace
